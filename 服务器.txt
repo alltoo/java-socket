@@ -1,0 +1,74 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<winsock2.h>
+#pragma comment (lib,"ws2_32.lib")
+
+int main()
+{ 
+	WSADATA wsaData;
+    WSAStartup(MAKEWORD(2,2), &wsaData);
+
+
+	SOCKET sListen=socket(AF_INET,SOCK_STREAM,0);
+	if(sListen==INVALID_SOCKET)//判断创建套结字是否成功
+	{
+		printf("fail socket\n");
+		return 0;
+	}
+
+
+	sockaddr_in sin;
+	char x[14];
+	printf("请输入ip地址:");
+	scanf("%s",x);
+	sin.sin_family=AF_INET;//IPv4协议
+	sin.sin_port=htons(4567);
+	sin.sin_addr.S_un.S_addr=inet_addr(x);
+	
+	if(bind(sListen,(LPSOCKADDR)&sin,sizeof(sin))==SOCKET_ERROR )//判断绑定是否成功;
+	{
+		printf("fail bind\n");
+		return 0;
+	}
+	if(listen(sListen,1)==SOCKET_ERROR)
+	{
+		printf("fail listen\n");
+		return 0;
+	}
+	sockaddr_in remoteAddr;//记录来自客户端的套接字;
+	int nAddrLen=sizeof(remoteAddr);
+	SOCKET sClient;
+	char szText[]="TCP Server Demo!\n";
+	char debuff[256];
+	char buff[256];
+	int i;
+	while(TRUE)
+	{
+		sClient=accept(sListen,(SOCKADDR*)&remoteAddr,&nAddrLen);
+
+		if(sClient==INVALID_SOCKET)
+		{
+			printf("fail accept\n");
+			continue;
+		}
+		printf("接受到一个连接:%s\n",inet_ntoa(remoteAddr.sin_addr));
+		
+		send(sClient,szText,strlen(szText),0);
+		while(1)
+		{
+	        int nRecv=recv(sClient,buff,strlen(buff),0);
+	        if(nRecv>0)
+			{
+				buff[nRecv]='\0';
+	         	printf("\n接收到数据:%s",buff);			
+			}
+			printf("\n传输数据:");
+			scanf("%s",debuff);
+			send(sClient,debuff,strlen(debuff),0);
+		}
+
+		closesocket(sClient);
+	}
+	closesocket(sListen);
+	return 0;
+}

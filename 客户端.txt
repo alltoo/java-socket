@@ -1,0 +1,59 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <winsock2.h>
+#pragma comment(lib, "ws2_32.lib")  //加载 ws2_32.dll
+    //初始化DLL
+
+
+   
+int main()
+{ 
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
+    //创建套接字
+    SOCKET s= socket(AF_INET,SOCK_STREAM,0);
+	if(s==INVALID_SOCKET)
+	{
+		printf("fail socket\n");
+		return 0;
+	}
+	sockaddr_in addr;
+	char x[14];
+	printf("请输入ip地址:");
+	scanf("%s",x);
+	addr.sin_family=AF_INET;
+	addr.sin_port=htons(4567);
+	addr.sin_addr.S_un.S_addr=inet_addr(x);
+	if(connect(s,(sockaddr*)&addr,sizeof(addr))==-1)
+	{
+		printf("fail connect\n");
+		return 0;
+	}
+	char debuff[256];
+	char buff[256];
+	int i;
+	while(1)
+	{
+		int nRecv=recv(s,buff,strlen(buff),0);
+	    if(nRecv>0)
+		{
+			buff[nRecv]='\0';
+		    printf("\n接收到数据:%s",buff);
+		
+		}
+		printf("\n输出数据:");
+		scanf("%s",debuff);
+		send(s,debuff,strlen(debuff),0);		
+	
+	}
+	closesocket(s);
+	return 0;
+	
+
+}
+	
+
+
+
+
