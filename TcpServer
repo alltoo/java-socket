@@ -12,7 +12,7 @@ public class TcpServer {
             Socket socket = server.accept();//accept方法；
             //建立连接
             InputStreamReader Sysin = new InputStreamReader(System.in);
-            BufferedReader SysBuf = new BufferedReader(Sysin);
+            BufferedReader SysBuf = new BufferedReader(Sysin); 
  
             InputStreamReader Socin = new InputStreamReader(socket.getInputStream());
             BufferedReader SocBuf = new BufferedReader(Socin);
