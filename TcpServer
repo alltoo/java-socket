@@ -9,7 +9,7 @@ public class TcpServer {
             //建立套接字
             ServerSocket server = new ServerSocket(4680);
             //监听
-            Socket socket = server.accept();
+            Socket socket = server.accept();//accept方法；
             //建立连接
             InputStreamReader Sysin = new InputStreamReader(System.in);
             BufferedReader SysBuf = new BufferedReader(Sysin);
@@ -20,11 +20,11 @@ public class TcpServer {
             PrintWriter Socout = new PrintWriter(socket.getOutputStream());
  
             //通信
-            System.out.println("Client:" + SocBuf.readLine());
-            String readline = SysBuf.readLine();
+            System.out.println("Client:" + SocBuf.readLine());//接受客户端发送的字符
+            String readline = SysBuf.readLine();//创建键盘上所读取的；
             while(!readline.equals("bye")){
-                Socout.println(readline);
-                Socout.flush();
+                Socout.println(readline);//发送给客户端
+                Socout.flush();//刷新缓冲区 
                 System.out.println("Server:" + readline);
  
                 String rl = SocBuf.readLine();
@@ -33,7 +33,7 @@ public class TcpServer {
                 else
                     break;
  
-                readline = SysBuf.readLine();
+                readline = SysBuf.readLine();//从键盘上读取；
             }
             //关闭IO、Socket
             Socout.close();
