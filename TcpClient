@@ -6,27 +6,28 @@ import java.io.*;
 public class TcpClient {
     public static void main(String[] args)throws Exception{
         try{
+        //抛出异常
             //创建Socket
             Socket socket = new Socket("127.0.0.1",4680);
  
             //建立连接
-            InputStreamReader Sysin = new InputStreamReader(System.in);
-            BufferedReader SysBuf = new BufferedReader(Sysin);
+            InputStreamReader Sysin = new InputStreamReader(System.in);//首先读取键盘输出；
+            BufferedReader SysBuf = new BufferedReader(Sysin);//放到缓冲区中；
  
-            InputStreamReader Socin = new InputStreamReader(socket.getInputStream());
+            InputStreamReader Socin = new InputStreamReader(socket.getInputStream());//从socket中读取的；
             BufferedReader SocBuf = new BufferedReader(Socin);
  
-            PrintWriter Socout = new PrintWriter(socket.getOutputStream());
+            PrintWriter Socout = new PrintWriter(socket.getOutputStream());//向socket写参数；
  
             //进行通信
-            String readline = SysBuf.readLine();
+            String readline = SysBuf.readLine();//读取键盘上键入的字符；
             while(!readline.equals("bye")){
-                Socout.println(readline);
-                Socout.flush();
-                System.out.println("Client:" + readline);
+                Socout.println(readline);//写入socket
+                Socout.flush();//刷缓冲区，让服务器马上接收到发送过去的东西；
+                System.out.println("Client:" + readline);//打印
  
-                System.out.println("Server:" + SocBuf.readLine());
-                readline = SysBuf.readLine();
+                System.out.println("Server:" + SocBuf.readLine());//打印接收到的，如果接收不到，会一直等待；
+                readline = SysBuf.readLine();//再次等待接收值
             }
             //关闭IO和Socket
             Socout.close();
